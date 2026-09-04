@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
+const BACKEND_ROOT = import.meta.env.VITE_API_BASE_URL
+  ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, "")
+  : "";
+
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: API_BASE,
 });
 
 api.interceptors.request.use((config) => {
@@ -12,13 +17,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Slike sad zahtijevaju autorizaciju (vidi server/routes/uploads.js), pa <img> tag
-// ne moze samo koristiti putanju iz baze direktno - <img> ne salje custom headere,
-// pa se token mora priloziti kao query parametar u samom URL-u.
 export function imageUrl(path) {
   if (!path) return "";
   const token = localStorage.getItem("token");
-  return `${path}${token ? `?token=${encodeURIComponent(token)}` : ""}`;
+  return `${BACKEND_ROOT}${path}${token ? `?token=${encodeURIComponent(token)}` : ""}`;
 }
 
 export default api;
