@@ -91,7 +91,13 @@
 
     <!-- Povijest -->
     <h6 v-if="history.length">Prijašnje prijave</h6>
-    <div v-for="h in history" :key="h._id" class="card mb-2">
+    <div
+      v-for="h in history"
+      :key="h._id"
+      class="card mb-2"
+      style="cursor: pointer"
+      @click="viewHistoryItem(h)"
+    >
       <div class="card-body py-2">
         <div class="d-flex justify-content-between">
           <strong>{{ h.naslovProblema }}</strong>
@@ -168,6 +174,12 @@ async function loadHistory() {
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("hr-HR");
+}
+
+function viewHistoryItem(h) {
+  result.value = h;
+  interestSentFor.value = new Set();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 onMounted(loadHistory);
